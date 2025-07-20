@@ -1,0 +1,58 @@
+from django.db import models
+
+# Create your models here.
+
+class ProductType(models.Model):
+    name = models.CharField(max_length=300)
+
+    def __str__(self):
+        return self.name
+
+class Department(models.Model):
+    name = models.CharField(max_length=300)
+
+    def __str__(self):
+        return self.name
+
+class Product(models.Model):
+    name = models.CharField(max_length=300)
+    description = models.TextField()
+    stock = models.IntegerField()
+    type = models.ForeignKey(ProductType, on_delete=models.CASCADE)
+    department = models.ManyToManyField(Department)
+
+    def __str__(self):
+        return self.name
+
+class Vendor(models.Model):
+    name = models.CharField(max_length=300)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.name
+
+class Purchase(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    price = models.FloatField()
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.product.name} - {self.vendor.name}"
+
+class Customer(models.Model):
+    name = models.CharField(max_length=300)
+    phone = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+class Sell(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    price = models.FloatField()
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.product.name} - {self.customer.name}"
