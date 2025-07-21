@@ -18,7 +18,7 @@ class Product(models.Model):
     name = models.CharField(max_length=300)
     description = models.TextField()
     stock = models.IntegerField()
-    type = models.ForeignKey(ProductType, on_delete=models.CASCADE)
+    type = models.ForeignKey(ProductType, on_delete=models.SET_NULL, null=True)
     department = models.ManyToManyField(Department)
 
     def __str__(self):

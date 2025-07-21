@@ -16,9 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from inventory.views import home
+from base.views import ProductTypeViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/', home)
+    path('product/types/', ProductTypeViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('product/types/<int:pk>/', ProductTypeViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
 ]
