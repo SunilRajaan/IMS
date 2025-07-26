@@ -29,8 +29,8 @@ class Vendor(models.Model):
     phone = models.CharField(max_length=20)
     email = models.EmailField()
 
-    def __str__(self):
-        return self.name
+    # def __str__(self):
+    #     return self.name
 
 class Purchase(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

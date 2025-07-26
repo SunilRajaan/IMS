@@ -16,12 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from inventory.views import ProductTypeViewSet, DepartmentApiView
+from inventory.views import ProductTypeViewSet, DepartmentApiView, ProductViewSet, VendorViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('product/types/', ProductTypeViewSet.as_view({'get': 'list', 'post': 'create'})),
     path('product/types/<int:pk>/', ProductTypeViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
     path('departments/', DepartmentApiView.as_view({'get': 'list', 'post': 'create'})),
-    path('departments/<int:pk>', DepartmentApiView.as_view({'get': 'retrive', 'patch' : 'parital update', 'put' : 'update', 'delete' : 'delete'})),
+    path('departments/<int:pk>/', DepartmentApiView.as_view({'get': 'retrieve', 'patch' : 'parital update', 'put' : 'update', 'delete' : 'destroy'})),
+    path('products/', ProductViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('products/<int:pk>/', ProductViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'})),
+    path('vendors/', VendorViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('vendors/<int:pk>/', VendorViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'})),
     ]
