@@ -64,7 +64,7 @@ class DepartmentApiView(GenericViewSet):
         serializer = self.get_serializer(queryset)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
-    def delete(self, request, pk):
+    def destroy(self, request, pk):
         queryset = self.get_object()
 
         queryset.delete()
