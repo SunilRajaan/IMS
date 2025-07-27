@@ -4,6 +4,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import ProductTypeSerializer, DepartmentSerializer, ProductSerializer,VendorSerializer
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 # def home(request):
@@ -11,6 +12,8 @@ from .serializers import ProductTypeSerializer, DepartmentSerializer, ProductSer
 class ProductTypeViewSet(ModelViewSet):
     queryset = ProductType.objects.all()
     serializer_class = ProductTypeSerializer
+    
+
 
 
 class DepartmentApiView(GenericViewSet):
@@ -19,7 +22,7 @@ class DepartmentApiView(GenericViewSet):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = self.get_serializer_class(queryset, many=True)
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
     
 

@@ -5,14 +5,14 @@ from django.db import models
 class ProductType(models.Model):
     name = models.CharField(max_length=300)
 
-    def __str__(self):
-        return self.name
+    # def __str__(self):
+    #     return self.name
 
 class Department(models.Model):
     name = models.CharField(max_length=300)
 
-    def __str__(self):
-        return self.name
+    # def __str__(self):
+    #     return self.name
 
 class Product(models.Model):
     name = models.CharField(max_length=300)
@@ -21,8 +21,8 @@ class Product(models.Model):
     type = models.ForeignKey(ProductType, on_delete=models.SET_NULL, null=True)
     department = models.ManyToManyField(Department)
 
-    def __str__(self):
-        return self.name
+    # def __str__(self):
+    #     return self.name
 
 class Vendor(models.Model):
     name = models.CharField(max_length=300)
