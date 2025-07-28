@@ -28,5 +28,6 @@ urlpatterns = [
     path('products/<int:pk>/', ProductViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'})),
     path('vendors/', VendorViewSet.as_view({'get': 'list', 'post': 'create'})),
     path('vendors/<int:pk>/', VendorViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'})),
-    path('register/', UserApiView.as_view({'post': 'register'}))
+    path('register/', UserApiView.as_view({'post': 'register'})),
+    path('login/', UserApiView.as_view({'post': 'login'}))
     ]

@@ -14,6 +14,12 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data['password'] = hash_password # passing the validated data onto create logic
         return super().create(validated_data)
 
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+
+
 class ProductTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductType

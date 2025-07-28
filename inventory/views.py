@@ -3,9 +3,11 @@ from .models import ProductType, Department, Product, Vendor
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import ProductTypeSerializer, DepartmentSerializer, ProductSerializer,VendorSerializer, UserSerializer
+from .serializers import ProductTypeSerializer, DepartmentSerializer, ProductSerializer,VendorSerializer, UserSerializer, LoginSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
 
 # Create your views here.
 # def home(request):
@@ -135,3 +137,19 @@ class UserApiView(GenericViewSet):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def login(self,request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():  
+            username = request.data.get('username')
+            password = request.data.get('password')
+
+            user = authenticate(username=username, password=password)
+        
+            if user == None:
+                return Response({"Error" : "Invalid credential"},status=status.HTTP_401_UNAUTHORIZED)
+            else:
+                token,_ =Token.objects.get_or_create(user=user)
+                return Response({'token':token.key})
+        else:
+            return 

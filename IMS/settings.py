@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'inventory',
-    'rest_framework'
+    'rest_framework',
+    'rest_framework.authtoken' # this module of rest framework contains Token model
 ]
 
 MIDDLEWARE = [
@@ -126,5 +127,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES' : [
         "rest_framework.permissions.IsAuthenticated",  # Default permission class for all views 
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
     ]
 }
