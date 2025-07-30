@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from inventory.views import ProductTypeViewSet, DepartmentApiView, ProductViewSet, VendorViewSet, UserApiView
+from inventory.views import ProductTypeViewSet, DepartmentApiView, ProductViewSet, VendorViewSet, UserApiView, SellViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,9 +25,12 @@ urlpatterns = [
     path("departments/",DepartmentApiView.as_view({'get':'list','post':'create'})),
     path("departments/<int:pk>/",DepartmentApiView.as_view({'get':'retrieve','patch':'partial_update','put':'update','delete':'destroy'})),
     path('products/', ProductViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('best/selling/products/', ProductViewSet.as_view({'get': 'best_selling'})),
     path('products/<int:pk>/', ProductViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'})),
     path('vendors/', VendorViewSet.as_view({'get': 'list', 'post': 'create'})),
     path('vendors/<int:pk>/', VendorViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'})),
     path('register/', UserApiView.as_view({'post': 'register'})),
-    path('login/', UserApiView.as_view({'post': 'login'}))
+    path('login/', UserApiView.as_view({'post': 'login'})),
+    path('sell/', SellViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('sell/<int:pk>/', SellViewSet.as_view({'get':'retrieve','patch':'partial_update','put':'update','delete':'destroy'})),
     ]

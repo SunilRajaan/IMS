@@ -38,21 +38,20 @@ class Purchase(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     quantity = models.IntegerField()
 
-    def __str__(self):
-        return f"{self.product.name} - {self.vendor.name}"
+    
 
 class Customer(models.Model):
     name = models.CharField(max_length=300)
     phone = models.CharField(max_length=20)
 
-    def __str__(self):
-        return self.name
+    # def __str__(self):
+    #     return self.name
 
 class Sell(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    price = models.FloatField()
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='sells')
+    price = models.FloatField(null=True, default=200)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField()
 
-    def __str__(self):
-        return f"{self.product.name} - {self.customer.name}"
+    # def __str__(self):
+    #     return f"{self.product.name} - {self.customer.name}"

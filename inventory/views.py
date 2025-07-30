@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from .models import ProductType, Department, Product, Vendor
+from django.db.models import Sum
+from .models import ProductType, Department, Product, Vendor, Sell
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import ProductTypeSerializer, DepartmentSerializer, ProductSerializer,VendorSerializer, UserSerializer, LoginSerializer
+from .serializers import ProductTypeSerializer, DepartmentSerializer, ProductSerializer,VendorSerializer, UserSerializer, LoginSerializer, SellSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
@@ -76,40 +77,46 @@ class DepartmentApiView(GenericViewSet):
         return Response()
     
 class ProductViewSet(ModelViewSet):
+    # queryset = Product.objects.all().order_by('-stock')
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-    def create(self, request):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            product = serializer.save()
-            departments = request.data.get('departments', [])
-            if departments:
-                product.department.set(departments)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def best_selling(self, request):
+        queryset = Product.objects.all().annotate(total_sell_quantity=Sum('sells__quantity')).order_by('-total_sell_quantity')
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
-    def update(self, request, pk):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data)
-        if serializer.is_valid():
-            product = serializer.save()
-            departments = request.data.get('departments')
-            if departments is not None:
-                product.department.set(departments)
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # def create(self, request):
+    #     serializer = self.get_serializer(data=request.data)
+    #     if serializer.is_valid():
+    #         product = serializer.save()
+    #         departments = request.data.get('departments', [])
+    #         if departments:
+    #             product.department.set(departments)
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def partial_update(self, request, pk):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        if serializer.is_valid():
-            product = serializer.save()
-            departments = request.data.get('departments')
-            if departments is not None:
-                product.department.set(departments)
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # def update(self, request, pk):
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance, data=request.data)
+    #     if serializer.is_valid():
+    #         product = serializer.save()
+    #         departments = request.data.get('departments')
+    #         if departments is not None:
+    #             product.department.set(departments)
+    #         return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # def partial_update(self, request, pk):
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance, data=request.data, partial=True)
+    #     if serializer.is_valid():
+    #         product = serializer.save()
+    #         departments = request.data.get('departments')
+    #         if departments is not None:
+    #             product.department.set(departments)
+    #         return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class VendorViewSet(ModelViewSet):
@@ -153,3 +160,7 @@ class UserApiView(GenericViewSet):
                 return Response({'token':token.key})
         else:
             return 
+
+class SellViewSet(ModelViewSet):
+    queryset = Sell.objects.all()
+    serializer_class = SellSerializer

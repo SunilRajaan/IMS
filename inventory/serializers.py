@@ -1,5 +1,5 @@
 from rest_framework import serializers 
-from .models import ProductType, Department, Product, Vendor
+from .models import ProductType, Department, Product, Vendor, Sell
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
@@ -40,4 +40,9 @@ class ProductSerializer(serializers.ModelSerializer):
 class VendorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vendor
+        fields = '__all__'
+
+class SellSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sell
         fields = '__all__'
