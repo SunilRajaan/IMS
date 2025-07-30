@@ -9,6 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
+from .ai import generate_product_description
+from rest_framework.decorators import action
 
 # Create your views here.
 # def home(request):
@@ -77,9 +79,38 @@ class DepartmentApiView(GenericViewSet):
         return Response()
     
 class ProductViewSet(ModelViewSet):
-    # queryset = Product.objects.all().order_by('-stock')
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    @action(detail=False, methods=['post'], url_path='generate-description')
+    def generate_description(self, request):
+        product_name = request.data.get('name')
+        if not product_name:
+            return Response(
+                {"error": "Product name is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        description = generate_product_description(product_name)
+        return Response(
+            {"name": product_name, "description": description},
+            status=status.HTTP_200_OK
+        )
+
+    def create(self, request, *args, **kwargs):
+        # If description is empty, generate one automatically
+        if not request.data.get('description'):
+            product_name = request.data.get('name')
+            if product_name:
+                try:
+                    description = generate_product_description(product_name)
+                    request.data._mutable = True
+                    request.data['description'] = description
+                    request.data._mutable = False
+                except Exception as e:
+                    print(f"Failed to generate description: {e}")
+        
+        return super().create(request, *args, **kwargs)
 
     def best_selling(self, request):
         queryset = Product.objects.all().annotate(total_sell_quantity=Sum('sells__quantity')).order_by('-total_sell_quantity')
@@ -159,7 +190,7 @@ class UserApiView(GenericViewSet):
                 token,_ =Token.objects.get_or_create(user=user)
                 return Response({'token':token.key})
         else:
-            return 
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SellViewSet(ModelViewSet):
     queryset = Sell.objects.all()

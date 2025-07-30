@@ -26,6 +26,7 @@ urlpatterns = [
     path("departments/<int:pk>/",DepartmentApiView.as_view({'get':'retrieve','patch':'partial_update','put':'update','delete':'destroy'})),
     path('products/', ProductViewSet.as_view({'get': 'list', 'post': 'create'})),
     path('best/selling/products/', ProductViewSet.as_view({'get': 'best_selling'})),
+    path('products/generate/description/', ProductViewSet.as_view({'post': 'generate_description'})),
     path('products/<int:pk>/', ProductViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'})),
     path('vendors/', VendorViewSet.as_view({'get': 'list', 'post': 'create'})),
     path('vendors/<int:pk>/', VendorViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'})),

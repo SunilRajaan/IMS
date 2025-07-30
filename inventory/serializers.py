@@ -35,6 +35,19 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
+    
+    def create(self, validated_data):
+        # Generate AI description if not provided
+        if not validated_data.get('description'):
+            try:
+                from .ai import generate_product_description
+                product_name = validated_data.get('name')
+                if product_name:
+                    validated_data['description'] = generate_product_description(product_name)
+            except Exception as e:
+                print(f"Failed to generate AI description: {e}")
+        
+        return super().create(validated_data)
 
 
 class VendorSerializer(serializers.ModelSerializer):
