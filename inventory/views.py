@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from django.db.models import Sum
-from .models import ProductType, Department, Product, Vendor, Sell
+from django.db.models import Sum, Avg
+from .models import ProductType, Department, Product, Vendor, Sell, Purchase, Rating
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import ProductTypeSerializer, DepartmentSerializer, ProductSerializer,VendorSerializer, UserSerializer, LoginSerializer, SellSerializer
+from .serializers import ProductTypeSerializer, DepartmentSerializer, ProductSerializer,VendorSerializer, UserSerializer, LoginSerializer, SellSerializer, PurchaseSerializer, RatingSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
@@ -117,6 +117,17 @@ class ProductViewSet(ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    
+    def most_purchased(self, request):
+        queryset = Product.objects.all().annotate(total_purchased_quantity=Sum('purchases__quantity')).order_by('-total_purchased_quantity')
+        serializer = self.get_serializer(queryset,many=True)
+        return Response(serializer.data)
+
+    def top_rated(self, request):
+        queryset = Product.objects.all().annotate(avg_rating=Avg('ratings__rating')).order_by('-avg_rating')
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
     # def create(self, request):
     #     serializer = self.get_serializer(data=request.data)
     #     if serializer.is_valid():
@@ -195,3 +206,11 @@ class UserApiView(GenericViewSet):
 class SellViewSet(ModelViewSet):
     queryset = Sell.objects.all()
     serializer_class = SellSerializer
+
+class PurchaseViewSet(ModelViewSet):
+    queryset = Purchase.objects.all()
+    serializer_class = PurchaseSerializer
+
+class RatingViewSet(ModelViewSet):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
