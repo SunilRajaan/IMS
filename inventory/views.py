@@ -5,7 +5,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import ProductTypeSerializer, DepartmentSerializer, ProductSerializer,VendorSerializer, UserSerializer, LoginSerializer, SellSerializer, PurchaseSerializer, RatingSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
@@ -81,6 +81,7 @@ class DepartmentApiView(GenericViewSet):
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [DjangoModelPermissions]
 
     @action(detail=False, methods=['post'], url_path='generate-description')
     def generate_description(self, request):
