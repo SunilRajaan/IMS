@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from inventory.views import ProductTypeViewSet, DepartmentApiView, ProductViewSet, VendorViewSet, UserApiView, SellViewSet, PurchaseViewSet, RatingViewSet
+from inventory.views import ProductTypeViewSet, DepartmentApiView, ProductViewSet, VendorViewSet, UserApiView, SellViewSet, PurchaseViewSet, RatingViewSet, GroupViewSet
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('product/types/', ProductTypeViewSet.as_view({'get': 'list', 'post': 'create'})),
@@ -39,4 +39,5 @@ urlpatterns = [
     path('top/rated/products/', ProductViewSet.as_view({'get': 'top_rated'})),
     path('product/ratings/', RatingViewSet.as_view({'get': 'list', 'post': 'create'})),
     path('product/ratings/<int:pk>/', RatingViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'})),
+    path('groups/', GroupViewSet.as_view({'get': 'list'})),
     ]

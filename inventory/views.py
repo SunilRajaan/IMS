@@ -4,9 +4,9 @@ from .models import ProductType, Department, Product, Vendor, Sell, Purchase, Ra
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import ProductTypeSerializer, DepartmentSerializer, ProductSerializer,VendorSerializer, UserSerializer, LoginSerializer, SellSerializer, PurchaseSerializer, RatingSerializer
+from .serializers import ProductTypeSerializer, DepartmentSerializer, ProductSerializer,VendorSerializer, UserSerializer, LoginSerializer, SellSerializer, PurchaseSerializer, RatingSerializer, GroupSerializer
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group 
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from .ai import generate_product_description
@@ -215,3 +215,7 @@ class PurchaseViewSet(ModelViewSet):
 class RatingViewSet(ModelViewSet):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
+
+class GroupViewSet(ModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer

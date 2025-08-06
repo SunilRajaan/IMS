@@ -1,6 +1,6 @@
 from rest_framework import serializers 
 from .models import ProductType, Department, Product, Vendor, Sell, Purchase, Rating
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
@@ -71,3 +71,8 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = '__all__'
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductType
+        fields = ['id', 'name']
