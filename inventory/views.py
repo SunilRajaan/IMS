@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from .ai import generate_product_description
 from rest_framework.decorators import action
+from rest_framework.exceptions import APIException
 
 # Create your views here.
 # def home(request):
@@ -83,7 +84,23 @@ class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
     permission_classes = [DjangoModelPermissions]
 
-    @action(detail=False, methods=['post'], url_path='generate-description')
+    def perform_create(self, serializer):  
+        product_name = serializer.validated_data.get("name")
+        description = serializer.validated_data.get("description", None)
+
+        # 💡 If description is not provided, generate it
+        try:
+            if not description:
+                description = generate_product_description(product_name)
+
+            serializer.save(description=description)
+
+        except Exception as e:
+        # Raise DRF exception, which sends proper HTTP 500 response
+            raise APIException(f"AI generation failed: {str(e)}")
+
+
+
     def generate_description(self, request):
         product_name = request.data.get('name')
         if not product_name:

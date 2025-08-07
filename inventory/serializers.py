@@ -35,6 +35,9 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
+        extra_kwargs = {
+            'description': {'required': False, 'allow_blank': True}
+        }
     
     def create(self, validated_data):
         # Generate AI description if not provided
